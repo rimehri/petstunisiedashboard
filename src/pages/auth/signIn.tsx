@@ -6,6 +6,7 @@ import {
   TextField,
   Stack,
   Button,
+  Alert,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { LoadingButton } from "@mui/lab";
@@ -22,24 +23,35 @@ type FormData = {
   password: string;
 };
 
+class CrendentialError extends Error {}
+
 export default function SignIn() {
   const { login, token } = useAuth();
 
   const {
     handleSubmit,
     register,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
-  const authPromise = (token: JwtToken, ms = 2000) =>
-    new Promise<string>((resolve) => {
+  const authPromise = (token: JwtToken, rejected = false, ms = 2000) =>
+    new Promise<string>((resolve, reject) => {
       setTimeout(() => {
-        resolve(token);
+        rejected ? reject(new CrendentialError()) : resolve(token);
       }, ms);
     });
 
   const onSubmit = async (data: FormData) => {
-    login(await authPromise(demoJwtToken));
+    try {
+      login(await authPromise(demoJwtToken, true));
+    } catch (e: unknown) {
+      if (e instanceof CrendentialError) {
+        Object.entries(data).forEach(([k]) => {
+          setError(k as keyof typeof data, { type: "credentials" });
+        });
+      }
+    }
   };
 
   if (token) return <Navigate to="/" />;
@@ -66,9 +78,18 @@ export default function SignIn() {
                   borderRadius: 2.5,
                 }}
               >
-                <Typography variant="h1" color="primary" textAlign="center">
-                  Se connecter
-                </Typography>
+                <Stack direction="column" gap={1.5}>
+                  <Typography variant="h1" color="primary" textAlign="center">
+                    Se connecter
+                  </Typography>
+
+                  {errors.email?.type === "credentials" && (
+                    <Alert severity="error">
+                      Email et/ou mot de passe incorrect(s)
+                    </Alert>
+                  )}
+                </Stack>
+
                 <Box component="form" mt={3} onSubmit={handleSubmit(onSubmit)}>
                   <Stack direction="column" gap={3}>
                     <TextField
