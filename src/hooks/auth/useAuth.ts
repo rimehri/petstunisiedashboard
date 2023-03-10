@@ -1,13 +1,15 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { JwtToken } from "../../types/app";
 
 const initialState = {
   token: null,
 };
 
 type Store = {
-  token: string | null;
-  login: (token: string) => void;
+  token: JwtToken | null;
+  login: (token: JwtToken) => void;
+  logout: () => void;
 };
 
 export const useAuth = create(
@@ -16,6 +18,9 @@ export const useAuth = create(
       ...initialState,
       login: (token) => {
         set({ token });
+      },
+      logout: () => {
+        set(initialState);
       },
     }),
     {

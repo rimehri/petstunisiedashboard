@@ -5,17 +5,19 @@ const theme = createTheme({
     fontFamily: "Poppins",
     h1: {
       fontWeight: 700,
-      fontSize: 35,
+      fontSize: 30,
     },
     h2: {
       fontWeight: 700,
-      fontSize: 30,
+      fontSize: 25,
     },
     h3: {
       fontWeight: 600,
+      fontSize: 20
     },
     h4: {
       fontWeight: 600,
+      fontSize: 18
     },
 
     caption: {

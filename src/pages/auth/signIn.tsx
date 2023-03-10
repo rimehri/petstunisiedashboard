@@ -14,6 +14,8 @@ import { useForm } from "react-hook-form";
 import Logo from "../../components/common/logo";
 import { useAuth } from "../../hooks/auth/useAuth";
 import { Navigate } from "react-router-dom";
+import { demoJwtToken } from "../../const";
+import { JwtToken } from "../../types/app";
 
 type FormData = {
   email: string;
@@ -29,15 +31,15 @@ export default function SignIn() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
-  const authPromise = (data: FormData, ms = 2000) =>
+  const authPromise = (token: JwtToken, ms = 2000) =>
     new Promise<string>((resolve) => {
       setTimeout(() => {
-        resolve((Math.random() + 1).toString(36).substring(7));
+        resolve(token);
       }, ms);
     });
 
   const onSubmit = async (data: FormData) => {
-    login(await authPromise(data));
+    login(await authPromise(demoJwtToken));
   };
 
   if (token) return <Navigate to="/" />;
