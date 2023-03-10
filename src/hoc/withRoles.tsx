@@ -2,8 +2,9 @@ import { ComponentType } from "react";
 import intersection from "lodash/intersection";
 import { Box, Stack, Typography } from "@mui/material";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
+import { Roles } from "../types/api";
 
-const ShowError = () => (
+const Error = () => (
   <Stack justifyContent="center" alignItems="center" mt={12} spacing={1.5}>
     <Box>
       <SentimentVeryDissatisfiedIcon
@@ -19,12 +20,12 @@ const ShowError = () => (
 
 const WithRoles = <T extends object>(
   Component: ComponentType<T>,
-  roles: string[]
+  roles: Roles
 ) => {
   const Hoc = (props: T) => {
     const isAllowed = !!intersection(roles, ["ADMIN"]).length;
 
-    if (!isAllowed) return <ShowError />;
+    if (!isAllowed) return <Error />;
 
     return <Component {...props} />;
   };

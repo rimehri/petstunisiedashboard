@@ -2,4 +2,6 @@ export type UserPayload = {
   roles: Roles;
 };
 
-export type Roles = "ADMIN" | "USER";
+export type Role = "ADMIN" | "USER";
+
+export type Roles = Role[]
