@@ -6,7 +6,9 @@ const useUser = () => {
   const { token } = useAuth();
 
   if (!token) {
-    throw new Error("User not authenticated");
+    throw new Error(
+      "User not authenticated. Make sure you wrappe your route with <PrivateRoute />"
+    );
   }
 
   return jwtDecode<UserPayload>(token);
